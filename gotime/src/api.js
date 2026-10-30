@@ -2,11 +2,11 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 const makeEmail = (number) => `${number}@dito-demo.app`;
 
+// --- CUSTOMER FUNCTIONS ---
 export const register = async (mobile, password) => {
   const { data, error } = await supabase.auth.signUp({
     email: makeEmail(mobile),
@@ -24,28 +24,15 @@ export const login = async (mobile, password) => {
   });
   
   if (error) {
-    // 1. Record FAILED login attempts in the database
-    await supabase.rpc('record_login_attempt', {
-      p_mobile: mobile,
-      p_success: false,
-      p_kind: 'login'
-    });
+    await supabase.rpc('record_login_attempt', { p_mobile: mobile, p_success: false, p_kind: 'login' });
     throw error;
   }
   
-  // 2. Record SUCCESSFUL login attempts
-  await supabase.rpc('record_login_attempt', {
-    p_mobile: mobile,
-    p_success: true,
-    p_kind: 'login'
-  });
-  
+  await supabase.rpc('record_login_attempt', { p_mobile: mobile, p_success: true, p_kind: 'login' });
   return data;
 };
 
-export const logout = async () => {
-  await supabase.auth.signOut();
-};
+export const logout = async () => { await supabase.auth.signOut(); };
 
 export const getUser = async () => {
   const { data } = await supabase.auth.getUser();
@@ -84,6 +71,7 @@ export const claimPromo = async (mobile, promoId) => {
   await supabase.from('claimed_promos').insert({ user_id: userData.user.id, promo_id: promoId });
 };
 
+// --- ADMIN FUNCTIONS ---
 export const checkIsAdmin = async () => {
   const { data, error } = await supabase.rpc('is_admin');
   return !!data;

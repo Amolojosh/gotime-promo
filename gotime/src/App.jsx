@@ -75,7 +75,7 @@ function AuthModal({ mode, onClose, onSwitch, onSuccess }) {
     if (number.trim().toLowerCase() === 'admin') {
       setBusy(true);
       try {
-        // Log in using the exact admin email format
+        // Log in using the exact admin email format expected by adminApi.js
         const { error } = await api.supabase.auth.signInWithPassword({
           email: 'admin@admin-demo.app',
           password: password
