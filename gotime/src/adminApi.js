@@ -6,10 +6,9 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 // 1. Create the Supabase client
 export const adminSb = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
-// 2. Admin Login
+// 2. Admin Login (Fixed to use admin-demo.app)
 export const adminLogin = async (username, password) => {
   if (!adminSb) throw new Error("Supabase not connected.");
-  // The app logs in using a fake email format based on the username
   const email = `${username}@admin-demo.app`;
   const { data, error } = await adminSb.auth.signInWithPassword({ email, password });
   if (error) throw error;
@@ -51,7 +50,6 @@ export const liveApi = {
       adminSb.from('login_attempts').select('*').eq('kind', 'admin').order('created_at', { ascending: false }).limit(100),
     ]);
 
-    // Format geo data into an object
     const geoMap = {};
     (geo.data || []).forEach(g => { geoMap[g.ip] = g; });
 
@@ -67,12 +65,9 @@ export const liveApi = {
       adminAttempts: adminAttempts.data || [],
     };
   },
-  enrichGeo: async (ips) => {
-    // Skip external API call to keep build simple
-  },
+  enrichGeo: async (ips) => {},
   subscribe: (callback) => {
     if (!adminSb) return () => {};
-    // Realtime subscription for live feed updates
     const channel = adminSb.channel('schema-db-changes')
       .on('postgres_changes', { event: '*', schema: 'public' }, callback)
       .subscribe();
@@ -80,36 +75,20 @@ export const liveApi = {
   }
 };
 
-// 7. Actions (Block, Unblock, etc.)
+// 7. Actions
 export const api2 = {
-  blockIp: async (ip, reason, hours) => {
-    await adminSb.rpc('admin_block_ip', { p_ip: ip, p_reason: reason, p_hours: hours });
-  },
-  unblockIp: async (ip) => {
-    await adminSb.from('blocked_ips').delete().eq('ip', ip);
-  },
-  deleteUser: async (id) => {
-    await adminSb.rpc('admin_delete_user', { p_id: id });
-  },
-  savePromo: async (promo) => {
-    await adminSb.from('promos').upsert(promo);
-  },
-  deletePromo: async (id) => {
-    await adminSb.from('promos').delete().eq('id', id);
-  },
-  saveSettings: async (settings) => {
-    await adminSb.from('security_settings').update(settings).eq('id', 1);
-  },
-  removeAdmin: async (userId) => {
-    await adminSb.from('admins').delete().eq('user_id', userId);
-  }
+  blockIp: async (ip, reason, hours) => { await adminSb.rpc('admin_block_ip', { p_ip: ip, p_reason: reason, p_hours: hours }); },
+  unblockIp: async (ip) => { await adminSb.from('blocked_ips').delete().eq('ip', ip); },
+  deleteUser: async (id) => { await adminSb.rpc('admin_delete_user', { p_id: id }); },
+  savePromo: async (promo) => { await adminSb.from('promos').upsert(promo); },
+  deletePromo: async (id) => { await adminSb.from('promos').delete().eq('id', id); },
+  saveSettings: async (settings) => { await adminSb.from('security_settings').update(settings).eq('id', 1); },
+  removeAdmin: async (userId) => { await adminSb.from('admins').delete().eq('user_id', userId); }
 };
 
-// 8. Demo API (used when you visit /#/admin/demo)
+// 8. Demo API
 export const makeDemoApi = () => ({
-  load: async () => ({
-    attempts: [], blocked: [], geo: {}, settings: {}, profiles: [], claims: [], promos: [], admins: [], adminAttempts: []
-  }),
+  load: async () => ({ attempts: [], blocked: [], geo: {}, settings: {}, profiles: [], claims: [], promos: [], admins: [], adminAttempts: [] }),
   enrichGeo: async () => {},
   subscribe: () => () => {}
 });

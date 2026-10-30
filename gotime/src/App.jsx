@@ -75,21 +75,23 @@ function AuthModal({ mode, onClose, onSwitch, onSuccess }) {
     if (number.trim().toLowerCase() === 'admin') {
       setBusy(true);
       try {
-        await api.login('admin', password);
-        const isAdmin = await api.checkIsAdmin();
-        if (isAdmin) {
-          window.location.hash = '#/admin';
-          onClose();
-          return;
-        } else {
-          setMessage('Not an admin account.');
-        }
+        // Log in using the exact admin email format
+        const { error } = await api.supabase.auth.signInWithPassword({
+          email: 'admin@admin-demo.app',
+          password: password
+        });
+        
+        if (error) throw error;
+        
+        // Success! Instantly redirect to the admin dashboard
+        window.location.hash = '#/admin';
+        onClose();
+        return;
       } catch (err) {
         setMessage(err.message);
-      } finally {
         setBusy(false);
+        return;
       }
-      return;
     }
 
     // 2. NORMAL CUSTOMER LOGIN CHECK
