@@ -10,10 +10,10 @@ export const adminSb = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, 
 export const adminLogin = async (username, password) => {
   if (!adminSb) throw new Error("Supabase not connected.");
   // The app logs in using a fake email format based on the username
-  const email = `${username}@dito-demo.app`;
+  const email = `${username}@admin-demo.app`;
   const { data, error } = await adminSb.auth.signInWithPassword({ email, password });
   if (error) throw error;
-  return data.user.user_metadata?.username || username;
+  return username;
 };
 
 // 3. Admin Logout
@@ -25,7 +25,7 @@ export const adminLogout = async () => {
 export const adminGetUser = async () => {
   if (!adminSb) return null;
   const { data } = await adminSb.auth.getUser();
-  return data.user ? (data.user.user_metadata?.username || 'admin') : null;
+  return data.user ? data.user.email.split('@')[0] : null;
 };
 
 // 5. Check if user is actually an admin
@@ -68,8 +68,7 @@ export const liveApi = {
     };
   },
   enrichGeo: async (ips) => {
-    // In a real app, you would call an IP lookup API here.
-    // For this demo, we skip it to keep the build simple.
+    // Skip external API call to keep build simple
   },
   subscribe: (callback) => {
     if (!adminSb) return () => {};
