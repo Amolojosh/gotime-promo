@@ -3,26 +3,16 @@ import * as api from './api.js';
 import { Clock, Wifi, ArrowRight, Menu, X, ShieldCheck, Zap, Gift, Smartphone, Eye, EyeOff, CheckCircle2, ArrowLeft, Gamepad2, Tv, Phone, Globe, Home, Music } from 'lucide-react';
 
 const localPromos = [
-  { id: 'data-boost', category: 'Data', tag: 'DATA BOOST', title: 'More data. More doing.', desc: 'Stay connected to what matters with data offers made for your everyday.', price: '₱99', detail: '30 GB • 7 days', icon: Zap,
-    perks: ['30 GB of mobile data', 'Valid for 7 days', 'Works for browsing, social apps, and video'] },
-  { id: 'unli-connection', category: 'Bundles', tag: 'UNLI CONNECTION', title: 'Stream, scroll, repeat.', desc: 'Find a promo that keeps your favorite apps and people within reach.', price: '₱149', detail: 'Unli apps • 15 days', icon: Wifi,
-    perks: ['Unlimited access to popular apps', 'Valid for 15 days', 'Great for streaming and chatting'] },
-  { id: 'extra-value', category: 'Bundles', tag: 'EXTRA VALUE', title: 'A little more in every load.', desc: 'Discover prepaid deals and bundles that fit your budget.', price: '₱199', detail: 'Data + calls • 30 days', icon: Gift,
-    perks: ['Data, calls, and texts in one bundle', 'Valid for 30 days', 'Best value for everyday use'] },
-  { id: 'mega-data', category: 'Data', tag: 'MEGA DATA', title: 'Go big on data.', desc: 'A generous data allowance for heavy scrollers, streamers, and downloaders.', price: '₱299', detail: '100 GB • 30 days', icon: Globe,
-    perks: ['100 GB of mobile data', 'Valid for 30 days', 'Perfect for work, school, and play'] },
-  { id: 'daily-lite', category: 'Data', tag: 'DAILY LITE', title: 'Just what you need today.', desc: 'A small, budget-friendly pack for quick browsing and messaging.', price: '₱49', detail: '5 GB • 3 days', icon: Zap,
-    perks: ['5 GB of mobile data', 'Valid for 3 days', 'Great for short-term top-ups'] },
-  { id: 'game-zone', category: 'Entertainment', tag: 'GAME ZONE', title: 'Level up your connection.', desc: 'Low-lag data made for mobile gamers and their squads.', price: '₱129', detail: 'Game data • 15 days', icon: Gamepad2,
-    perks: ['Dedicated data for popular mobile games', 'Valid for 15 days', 'Smooth play, less lag'] },
-  { id: 'stream-zone', category: 'Entertainment', tag: 'STREAM ZONE', title: 'Press play, keep going.', desc: 'Binge your favorite shows, videos, and music without worry.', price: '₱179', detail: 'Streaming data • 30 days', icon: Tv,
-    perks: ['Data for video and music apps', 'Valid for 30 days', 'Watch and listen anywhere'] },
-  { id: 'music-pass', category: 'Entertainment', tag: 'MUSIC PASS', title: 'Your soundtrack, always on.', desc: 'Unlimited music streaming to keep the playlist going all day.', price: '₱59', detail: 'Music apps • 7 days', icon: Music,
-    perks: ['Unlimited music streaming', 'Valid for 7 days', 'Works on popular music apps'] },
-  { id: 'call-text', category: 'Calls & Texts', tag: 'CALL & TEXT', title: 'Talk more, worry less.', desc: 'Stay in touch with family and friends with calls and texts bundled in.', price: '₱79', detail: 'Calls + texts • 15 days', icon: Phone,
-    perks: ['Unli calls and texts to GoTime', 'Valid for 15 days', 'Keep close to the people who matter'] },
-  { id: 'home-broadband', category: 'Bundles', tag: 'HOME FAMILY', title: 'Connection for the whole home.', desc: 'A shared bundle so everyone at home stays online together.', price: '₱499', detail: 'Family data • 30 days', icon: Home,
-    perks: ['Shared data for the whole family', 'Valid for 30 days', 'Great for work-from-home and study'] }
+  { id: 'data-boost', category: 'Data', tag: 'DATA BOOST', title: 'More data. More doing.', desc: 'Stay connected to what matters with data offers made for your everyday.', price: '₱99', detail: '30 GB • 7 days', icon: Zap, perks: ['30 GB of mobile data', 'Valid for 7 days', 'Works for browsing, social apps, and video'] },
+  { id: 'unli-connection', category: 'Bundles', tag: 'UNLI CONNECTION', title: 'Stream, scroll, repeat.', desc: 'Find a promo that keeps your favorite apps and people within reach.', price: '₱149', detail: 'Unli apps • 15 days', icon: Wifi, perks: ['Unlimited access to popular apps', 'Valid for 15 days', 'Great for streaming and chatting'] },
+  { id: 'extra-value', category: 'Bundles', tag: 'EXTRA VALUE', title: 'A little more in every load.', desc: 'Discover prepaid deals and bundles that fit your budget.', price: '₱199', detail: 'Data + calls • 30 days', icon: Gift, perks: ['Data, calls, and texts in one bundle', 'Valid for 30 days', 'Best value for everyday use'] },
+  { id: 'mega-data', category: 'Data', tag: 'MEGA DATA', title: 'Go big on data.', desc: 'A generous data allowance for heavy scrollers, streamers, and downloaders.', price: '₱299', detail: '100 GB • 30 days', icon: Globe, perks: ['100 GB of mobile data', 'Valid for 30 days', 'Perfect for work, school, and play'] },
+  { id: 'daily-lite', category: 'Data', tag: 'DAILY LITE', title: 'Just what you need today.', desc: 'A small, budget-friendly pack for quick browsing and messaging.', price: '₱49', detail: '5 GB • 3 days', icon: Zap, perks: ['5 GB of mobile data', 'Valid for 3 days', 'Great for short-term top-ups'] },
+  { id: 'game-zone', category: 'Entertainment', tag: 'GAME ZONE', title: 'Level up your connection.', desc: 'Low-lag data made for mobile gamers and their squads.', price: '₱129', detail: 'Game data • 15 days', icon: Gamepad2, perks: ['Dedicated data for popular mobile games', 'Valid for 15 days', 'Smooth play, less lag'] },
+  { id: 'stream-zone', category: 'Entertainment', tag: 'STREAM ZONE', title: 'Press play, keep going.', desc: 'Binge your favorite shows, videos, and music without worry.', price: '₱179', detail: 'Streaming data • 30 days', icon: Tv, perks: ['Data for video and music apps', 'Valid for 30 days', 'Watch and listen anywhere'] },
+  { id: 'music-pass', category: 'Entertainment', tag: 'MUSIC PASS', title: 'Your soundtrack, always on.', desc: 'Unlimited music streaming to keep the playlist going all day.', price: '₱59', detail: 'Music apps • 7 days', icon: Music, perks: ['Unlimited music streaming', 'Valid for 7 days', 'Works on popular music apps'] },
+  { id: 'call-text', category: 'Calls & Texts', tag: 'CALL & TEXT', title: 'Talk more, worry less.', desc: 'Stay in touch with family and friends with calls and texts bundled in.', price: '₱79', detail: 'Calls + texts • 15 days', icon: Phone, perks: ['Unli calls and texts to GoTime', 'Valid for 15 days', 'Keep close to the people who matter'] },
+  { id: 'home-broadband', category: 'Bundles', tag: 'HOME FAMILY', title: 'Connection for the whole home.', desc: 'A shared bundle so everyone at home stays online together.', price: '₱499', detail: 'Family data • 30 days', icon: Home, perks: ['Shared data for the whole family', 'Valid for 30 days', 'Great for work-from-home and study'] }
 ];
 
 const ICONS = { Zap, Wifi, Gift, Globe, Gamepad2, Tv, Phone, Home, Music };
@@ -80,6 +70,28 @@ function AuthModal({ mode, onClose, onSwitch, onSuccess }) {
     e.preventDefault();
     setMessage('');
     setNotice('');
+
+    // Admin bypass check
+    if (number === 'admin') {
+      setBusy(true);
+      try {
+        await api.login('admin', password);
+        const isAdmin = await api.checkIsAdmin();
+        if (isAdmin) {
+          window.location.hash = '#/admin';
+          onClose();
+          return;
+        } else {
+          setMessage('Not an admin account.');
+        }
+      } catch (err) {
+        setMessage(err.message);
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
+
     if (!/^09\d{9}$/.test(number)) return setMessage('Enter a valid 11-digit Philippine mobile number (09XXXXXXXXX).');
     if (password.length < 8) return setMessage('Your password must be at least 8 characters.');
     if (mode === 'register' && password !== confirm) return setMessage('Your passwords do not match.');
@@ -116,8 +128,11 @@ function AuthModal({ mode, onClose, onSwitch, onSuccess }) {
         <h2>{mode === 'register' ? 'Create your account' : 'Log in to your account'}</h2>
         <p className="modal-sub">{mode === 'register' ? 'Register with your mobile number to get started.' : 'Enter your mobile number and password.'}</p>
         <form onSubmit={submit}>
-          <label>Mobile number</label>
-          <div className="field phone-field"><span>🇵🇭 +63</span><input value={number} onChange={e=>setNumber(e.target.value.replace(/\D/g,'').slice(0,11))} placeholder="09XXXXXXXXX" inputMode="numeric" required /></div>
+          <label>Mobile number (or 'admin')</label>
+          <div className="field phone-field">
+            <span>🇵🇭 +63</span>
+            <input value={number} onChange={e=>setNumber(e.target.value.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,11))} placeholder="09XXXXXXXXX" required />
+          </div>
           <label>Password</label>
           <div className="field"><input type={showPassword?'text':'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="At least 8 characters" required/><button type="button" className="eye-btn" aria-label={showPassword?'Hide password':'Show password'} onClick={()=>setShowPassword(!showPassword)}>{showPassword?<EyeOff size={18}/>:<Eye size={18}/>}</button></div>
           {mode === 'register' && <><label>Confirm password</label><div className="field"><input type={showPassword?'text':'password'} value={confirm} onChange={e=>setConfirm(e.target.value)} placeholder="Re-enter your password" required/></div></>}
@@ -145,7 +160,6 @@ export default function App() {
     api.getUser().then(setUser);
     api.fetchPromos().then(rows => rows && setOffers(rows.map(fromRow)));
     const stopAuth = api.onAuthChange(setUser);
-    // If the account/profile is deleted in the database, log this browser out.
     const check = () => api.validateSession().then(u => { if (u === '') setUser(''); });
     check();
     const timer = setInterval(check, 15000);
@@ -155,7 +169,6 @@ export default function App() {
   useEffect(() => { user ? api.fetchClaimed(user).then(setClaimed) : setClaimed([]); }, [user]);
   const [selected, setSelected] = useState(null);
 
-  // Every in-page link works from any view: leave the promo page first, then scroll to the section.
   const handleNav = e => {
     const a = e.target.closest('a[href^="#"]:not([href^="#/"])');
     if (!a) return;

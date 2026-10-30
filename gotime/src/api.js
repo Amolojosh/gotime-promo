@@ -2,7 +2,9 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Export supabase so we can use it for the admin check in App.jsx
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
 const makeEmail = (number) => `${number}@dito-demo.app`;
 
@@ -22,11 +24,13 @@ export const login = async (mobile, password) => {
     password: password,
   });
   if (error) throw error;
+  
   await supabase.rpc('record_login_attempt', {
     p_mobile: mobile,
     p_success: true,
     p_kind: 'login'
   });
+  
   return data;
 };
 
@@ -69,4 +73,10 @@ export const claimPromo = async (mobile, promoId) => {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return;
   await supabase.from('claimed_promos').insert({ user_id: userData.user.id, promo_id: promoId });
+};
+
+// --- NEW FUNCTION FOR ADMIN REDIRECT ---
+export const checkIsAdmin = async () => {
+  const { data, error } = await supabase.rpc('is_admin');
+  return !!data;
 };
