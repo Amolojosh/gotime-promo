@@ -21,17 +21,12 @@ export const login = async (mobile, password) => {
     email: makeEmail(mobile),
     password: password,
   });
-  
   if (error) throw error;
-  
-  // --- THIS IS THE MAGIC LINE ---
-  // This records the login attempt so it shows up in the Admin Dashboard!
   await supabase.rpc('record_login_attempt', {
     p_mobile: mobile,
     p_success: true,
     p_kind: 'login'
   });
-  
   return data;
 };
 
