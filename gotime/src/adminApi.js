@@ -6,7 +6,7 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 // 1. Create the Supabase client
 export const adminSb = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
-// 2. Admin Login (Fixed to use admin-demo.app)
+// 2. Admin Login
 export const adminLogin = async (username, password) => {
   if (!adminSb) throw new Error("Supabase not connected.");
   const email = `${username}@admin-demo.app`;
@@ -65,7 +65,37 @@ export const liveApi = {
       adminAttempts: adminAttempts.data || [],
     };
   },
-  enrichGeo: async (ips) => {},
+  enrichGeo: async (ips) => {
+    if (!adminSb) return;
+    const missingIps = ips.filter(ip => ip && ip !== '127.0.0.1' && ip !== '::1');
+    if (!missingIps.length) return;
+    
+    try {
+      for (const ip of missingIps) {
+        // Use a secure API (HTTPS) that Vercel can access
+        const res = await fetch(`https://ipwho.is/${ip}`);
+        const data = await res.json();
+        
+        if (data.success) {
+          await adminSb.from('ip_geo').upsert({
+            ip: ip,
+            country: data.country,
+            country_code: data.country_code,
+            region: data.region,
+            city: data.city,
+            lat: data.latitude,
+            lon: data.longitude,
+            isp: data.connection?.isp,
+            org: data.connection?.org,
+            asn: data.connection?.asn ? `AS${data.connection.asn}` : null,
+            timezone: data.timezone?.id
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Failed to fetch geo data", e);
+    }
+  },
   subscribe: (callback) => {
     if (!adminSb) return () => {};
     const channel = adminSb.channel('schema-db-changes')
