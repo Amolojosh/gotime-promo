@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as api from './api.js';
+import Admin from './Admin.jsx'; // <-- ADDED THIS IMPORT
 import { Clock, Wifi, ArrowRight, Menu, X, ShieldCheck, Zap, Gift, Smartphone, Eye, EyeOff, CheckCircle2, ArrowLeft, Gamepad2, Tv, Phone, Globe, Home, Music } from 'lucide-react';
 
 const localPromos = [
@@ -75,7 +76,6 @@ function AuthModal({ mode, onClose, onSwitch, onSuccess }) {
     if (number.trim().toLowerCase() === 'admin') {
       setBusy(true);
       try {
-        // Log in using the exact admin email format expected by adminApi.js
         const { error } = await api.supabase.auth.signInWithPassword({
           email: 'admin@admin-demo.app',
           password: password
@@ -83,7 +83,6 @@ function AuthModal({ mode, onClose, onSwitch, onSuccess }) {
         
         if (error) throw error;
         
-        // Success! Instantly redirect to the admin dashboard
         window.location.hash = '#/admin';
         onClose();
         return;
@@ -152,6 +151,13 @@ function AuthModal({ mode, onClose, onSwitch, onSuccess }) {
 }
 
 export default function App() {
+  // --- ADDED THIS BLOCK TO HANDLE THE ADMIN ROUTE ---
+  const isAdminRoute = window.location.hash.startsWith('#/admin');
+  if (isAdminRoute) {
+    return <Admin demo={window.location.hash.includes('demo')} />;
+  }
+  // ---------------------------------------------------
+
   const [modal, setModal] = useState('');
   const [mobileMenu, setMobileMenu] = useState(false);
   const [activeTab, setActiveTab] = useState('All offers');
