@@ -71,8 +71,8 @@ function AuthModal({ mode, onClose, onSwitch, onSuccess }) {
     setMessage('');
     setNotice('');
 
-    // Admin bypass check
-    if (number === 'admin') {
+    // 1. ADMIN LOGIN CHECK
+    if (number.trim().toLowerCase() === 'admin') {
       setBusy(true);
       try {
         await api.login('admin', password);
@@ -92,9 +92,11 @@ function AuthModal({ mode, onClose, onSwitch, onSuccess }) {
       return;
     }
 
+    // 2. NORMAL CUSTOMER LOGIN CHECK
     if (!/^09\d{9}$/.test(number)) return setMessage('Enter a valid 11-digit Philippine mobile number (09XXXXXXXXX).');
     if (password.length < 8) return setMessage('Your password must be at least 8 characters.');
     if (mode === 'register' && password !== confirm) return setMessage('Your passwords do not match.');
+    
     setBusy(true);
     try {
       if (mode === 'register') {
