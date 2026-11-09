@@ -150,14 +150,7 @@ function AuthModal({ mode, onClose, onSwitch, onSuccess }) {
   </div>
 }
 
-export default function App() {
-  // --- ADDED THIS BLOCK TO HANDLE THE ADMIN ROUTE ---
-  const isAdminRoute = window.location.hash.startsWith('#/admin');
-  if (isAdminRoute) {
-    return <Admin demo={window.location.hash.includes('demo')} />;
-  }
-  // ---------------------------------------------------
-
+function Site() {
   const [modal, setModal] = useState('');
   const [mobileMenu, setMobileMenu] = useState(false);
   const [activeTab, setActiveTab] = useState('All offers');
@@ -240,4 +233,16 @@ export default function App() {
     <footer><a className="brand footer-brand" href="#home"><span className="brand-icon"><Clock size={21}/></span><span>GoTime<span className="brand-dot">.</span></span></a><span>© 2026 GoTime promo concept. Independent demo website.</span><div><a href="#offers">Promos</a><a href="#why">About</a><a href="#/admin">Admin</a><button onClick={()=>openAuth('login')}>Log in</button></div></footer>
     {modal && <AuthModal mode={modal} onClose={()=>setModal('')} onSwitch={setModal} onSuccess={setUser}/>}
   </div>
+}
+
+export default function App() {
+  const [route, setRoute] = useState(() => window.location.hash);
+  useEffect(() => {
+    const onHash = () => setRoute(window.location.hash);
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  if (route.startsWith('#/admin')) return <Admin demo={route.includes('demo')} />;
+  return <Site />;
 }

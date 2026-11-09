@@ -5,7 +5,7 @@ import {
   ShieldCheck, ShieldAlert, LayoutDashboard, ScrollText, Crosshair, Ban, Users, Package, Settings, LogOut,
   Search, Copy, ExternalLink, Download, X, Globe, Lock, Activity, RefreshCw, Trash2, Plus, Radio, KeyRound, Eye, EyeOff, ArrowLeft,
 } from 'lucide-react';
-import { liveApi, isAdmin, makeDemoApi, adminSb, adminLogin, adminLogout, adminGetUser } from './adminApi.js';
+import { liveApi, isAdmin, makeDemoApi, adminSb, adminLogin, adminLogout, adminGetUser, api2 as adminActions } from './adminApi.js';
 import './admin.css';
 
 /* ---------------- helpers ---------------- */
@@ -614,7 +614,7 @@ function Gate({ onDone, denied, onSignOut }) {
     <p className="sx-sub">Restricted area. Every login attempt is logged with IP and location.</p>
     {denied && <p className="sx-err">You're signed in, but this account isn't an administrator. <button className="sx-link" onClick={onSignOut}>Sign out</button></p>}
     <form onSubmit={submit}>
-      <label>Username or email<input value={n} onChange={e => setN(e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 20))} placeholder="admin" autoComplete="username" autoCapitalize="none" spellCheck={false} /></label>
+      <label>Username or email<input value={n} onChange={e => setN(e.target.value.toLowerCase().replace(/[^a-z0-9._@-]/g, '').slice(0, 60))} placeholder="admin or admin@yourdomain.com" autoComplete="username" autoCapitalize="none" spellCheck={false} /></label>
       <label>Password<span className="sx-pw"><input type={show ? 'text' : 'password'} value={p} onChange={e => setP(e.target.value)} autoComplete="current-password" /><button type="button" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'}>{show ? <EyeOff size={16} /> : <Eye size={16} />}</button></span></label>
       {err && <p className="sx-err">{err}</p>}
       <button className="sx-btn wide" disabled={busy}>{busy ? 'Verifying…' : 'Sign in'}</button>
@@ -625,7 +625,7 @@ function Gate({ onDone, denied, onSignOut }) {
 }
 
 /* ---------------- shell ---------------- */
-let api2 = liveApi; // active data provider (live or demo)
+let api2 = { ...liveApi, ...adminActions }; // active data provider (live or demo)
 
 const NAV = [['overview', 'Overview', LayoutDashboard], ['log', 'Attempt log', ScrollText], ['attackers', 'Attackers', Crosshair], ['blocked', 'Blocklist', Ban], ['users', 'Customers', Users], ['admins', 'Admins', ShieldCheck], ['promos', 'Offers', Package], ['settings', 'Defender rules', Settings]];
 
@@ -695,7 +695,7 @@ export default function Admin({ demo }) {
   const [who, setWho] = useState('');
   useEffect(() => {
     if (demo) { api2 = makeDemoApi(); setWho('demo-admin'); setState('in'); return; }
-    api2 = liveApi;
+    api2 = { ...liveApi, ...adminActions };
     (async () => {
       if (!adminSb) return setState('nosb');
       const u = await adminGetUser();
